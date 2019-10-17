@@ -1,3 +1,6 @@
+Port Usage on Ethernet switches
+-------------------------------
+
 An organisation which we have a close relationship with has a number of large Cisco 5500 & 6500 chassis based ethernet switches serving many users. Looking at the spagehtti of wiring round each one and the number of patched ports with no link light on made me think it would be useful to have an idea of how many ports were actually in use. This series of scripts was written to test our much smaller 2950 24 port ethernet switches for the same reason. Users will phone up and complain that there are no free ports left to plug the latest pc purchase in to, but a quick look at the html output of this program will reveal what is actually in use.
  
 The current version (portprobe-0.6.pl) is configured from a text file containing the ip address of the switch and a test description to display on the output page:-
@@ -9,6 +12,8 @@ The current version (portprobe-0.6.pl) is configured from a text file containing
 The trailing comma is important. The program flow is basically one loop inside another. The inside loop does the work for each device tested and produces the html output whilst the outer loop iterates through the config text file and calls the inner loop for each line present.
  
 Subroutines
+-----------
+
 sub Ping{} generates a ping from the variable passed to it, as it was copied from an earlier script which required the ping round trip duration, it takes the ping response apart and extracts the duration and sets a variable ($colour) if the time exceeds a threshold (20ms). It reports if the target is alive, the time and units of the ping response and the threshold colour. N.B. This subroutine is the most likely to break between different versions of os and indeed between different releases of ping. This is because of the slightly different text replies that ping produces. It can be fixed with little difficulty by studying the text and following the pattern matching.
 sub Uptime{} returns the uptime of the local machine, NOT the target in days and hours.
 subSNMPget{} actually does most of the work because it gets the value corresponding to the oid passed to it. It relies on the perl module Net::SNMP. It just returns the snmp response and maybe an error. The 0.6 version cleans this code up so it returns a sensible error if the OID asked for does not exist.
